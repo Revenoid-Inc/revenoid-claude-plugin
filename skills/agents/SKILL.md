@@ -34,7 +34,7 @@ If `defaultAgentId` is set in the response, mark that agent with ⭐ in its row.
 
 If the user has only system / seed agents (`isSystemAgent: true` for all), call that out:
 
-> *You don't have any custom-trained agents yet. The agents below are Revenoid-provided defaults. Train your own at https://app.revenoid.com/messaging-ai/messaging-agent for tighter voice match.*
+> *You don't have any custom-trained agents yet. The agents below are Revenoid-provided defaults. Train your own at https://admin.revenoid.com/messaging-ai/messaging-agent for tighter voice match.*
 
 ## Step 3 — Suggest next moves
 

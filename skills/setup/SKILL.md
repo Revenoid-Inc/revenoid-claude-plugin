@@ -30,7 +30,7 @@ Show:
 >
 > - **Account**: `<company name from get_company_info>`
 > - **Active ICP**: `<icp_setting.name>`
-> - **Connected integrations**: `<comma list>` (or "None connected — connect from app.revenoid.com → Settings")
+> - **Connected integrations**: `<comma list>` (or "None connected — connect from admin.revenoid.com → Settings")
 > - **Tracked signals**: `<count>` buying / hiring / fact triggers
 >
 > Everything looks good. Run `/revenoid:help` to see what you can do.
@@ -55,11 +55,11 @@ This is the canonical first-run flow. Walk the user through three numbered steps
 >
 > #### 1. Sign up (2 min)
 >
-> Go to **https://app.revenoid.com** and create an account (Google / Microsoft SSO works, or email). Complete the onboarding flow that asks about your ICP — that powers most of the tools you're about to use.
+> Go to **https://admin.revenoid.com** and create an account (Google / Microsoft SSO works, or email). Complete the onboarding flow that asks about your ICP — that powers most of the tools you're about to use.
 >
 > #### 2. Generate an API key (30 sec)
 >
-> Once signed in, open **Settings → API Keys** ([app.revenoid.com/p2p/settings](https://app.revenoid.com/p2p/settings)) and click **New key**. Give it a name like "Claude Code" so you recognize it later.
+> Once signed in, open **Settings → API Keys** ([admin.revenoid.com/p2p/settings](https://admin.revenoid.com/p2p/settings)) and click **New key**. Give it a name like "Claude Code" so you recognize it later.
 >
 > ⚠️ **Copy the key immediately** — it shows once and only once. Looks like: `rvk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 >
@@ -103,7 +103,7 @@ End with **"What's next?"**:
 
 - `/revenoid:setup` (re-run after configuring the key)
 - `/revenoid:help` (see everything once connected)
-- `Open https://app.revenoid.com/p2p/settings`
+- `Open https://admin.revenoid.com/p2p/settings`
 
 ---
 
@@ -113,10 +113,10 @@ End with **"What's next?"**:
 >
 > The key is configured but Revenoid rejected it. Two most-likely causes:
 >
-> 1. **Key was revoked** — someone (maybe you?) clicked the trash icon on it in the dashboard. Active keys are visible at [app.revenoid.com/p2p/settings](https://app.revenoid.com/p2p/settings).
+> 1. **Key was revoked** — someone (maybe you?) clicked the trash icon on it in the dashboard. Active keys are visible at [admin.revenoid.com/p2p/settings](https://admin.revenoid.com/p2p/settings).
 > 2. **Key was rotated** — you regenerated and forgot to update the env var.
 >
-> **Fix**: mint a new key at [app.revenoid.com/p2p/settings](https://app.revenoid.com/p2p/settings) → New key, then update your env var:
+> **Fix**: mint a new key at [admin.revenoid.com/p2p/settings](https://admin.revenoid.com/p2p/settings) → New key, then update your env var:
 >
 > ```bash
 > # zsh — replace existing line in ~/.zshrc, or run:
@@ -131,7 +131,7 @@ End with **"What's next?"**:
 
 ## What's next?
 
-- `Open https://app.revenoid.com/p2p/settings`
+- `Open https://admin.revenoid.com/p2p/settings`
 - `/revenoid:setup` (re-run after rotating the key)
 - `Show me my recently-used keys` (calls list_messaging_agents-style, shows the keyPrefix to identify which key broke)
 
@@ -143,7 +143,7 @@ End with **"What's next?"**:
 >
 > Free plan gets 500 credits to start. Most users go through these in their first week of heavy use.
 >
-> **Buy more**: [app.revenoid.com/p2p/pricing](https://app.revenoid.com/p2p/pricing)
+> **Buy more**: [admin.revenoid.com/p2p/billing](https://admin.revenoid.com/p2p/billing)
 >
 > Plans:
 > - **Starter** — 2,000 credits/mo (~$20)
@@ -159,7 +159,7 @@ End with **"What's next?"**:
 
 ## What's next?
 
-- `Open https://app.revenoid.com/p2p/pricing`
+- `Open https://admin.revenoid.com/p2p/billing`
 - `Show me what I've used my credits on` (links to dashboard's Credit Usage page)
 - `/revenoid:help` (see free tools that don't consume credits)
 

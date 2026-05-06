@@ -106,7 +106,7 @@ You can call any of the 23 tools by name; the plugin's MCP server handles the re
 
 - 23 full tool list: `/revenoid:help tools` (or visit https://revenoid.com/mcp)
 - Plugin source: https://github.com/Revenoid-Inc/revenoid-claude-plugin
-- Get a key / buy credits: https://app.revenoid.com → Settings → API Keys
+- Get a key / buy credits: https://admin.revenoid.com → Settings → API Keys
 
 ---
 

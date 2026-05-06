@@ -79,8 +79,8 @@ If any tool call returns an error, recognize the pattern and route the user to t
 
 | Error contains… | Diagnosis | Tell the user |
 |---|---|---|
-| `INSUFFICIENT_CREDITS` or HTTP 402 | Out of free credits | "You've used your free credits. Upgrade at https://app.revenoid.com/p2p/pricing — Starter plan is $20/mo for 2,000 credits. Or run `/revenoid:setup` for the full breakdown." |
-| `INVALID_API_KEY` / `API key has been revoked` / 401 | Key is bad or revoked | "Your API key isn't working — likely revoked or rotated. Mint a new one at https://app.revenoid.com/p2p/settings and update your `REVENOID_API_KEY` env var. Run `/revenoid:setup` for step-by-step." |
+| `INSUFFICIENT_CREDITS` or HTTP 402 | Out of free credits | "You've used your free credits. Upgrade at https://admin.revenoid.com/p2p/billing — Starter plan is $20/mo for 2,000 credits. Or run `/revenoid:setup` for the full breakdown." |
+| `INVALID_API_KEY` / `API key has been revoked` / 401 | Key is bad or revoked | "Your API key isn't working — likely revoked or rotated. Mint a new one at https://admin.revenoid.com/p2p/settings and update your `REVENOID_API_KEY` env var. Run `/revenoid:setup` for step-by-step." |
 | `API key required` (no auth header) | Env var not set | "Run `/revenoid:setup` — looks like the plugin's MCP server can't see your API key." |
 | Anything else | Unknown error | Surface the error message verbatim + suggest running `/revenoid:setup` to verify connectivity. |
 
@@ -88,5 +88,5 @@ After surfacing the error, ALSO offer the recovery path as a tab-acceptable sugg
 
 ```
 - `/revenoid:setup`
-- `Open https://app.revenoid.com/p2p/pricing`
+- `Open https://admin.revenoid.com/p2p/billing`
 ```

@@ -98,8 +98,8 @@ If any tool call returns an error, recognize the pattern and route the user to t
 
 | Error contains… | Tell the user |
 |---|---|
-| `INSUFFICIENT_CREDITS` / 402 | "You've used your free credits. Upgrade at https://app.revenoid.com/p2p/pricing or run `/revenoid:setup` for the full breakdown." |
-| `INVALID_API_KEY` / 401 / `revoked` | "Your API key isn't working. Mint a new one at https://app.revenoid.com/p2p/settings and update `REVENOID_API_KEY`. Run `/revenoid:setup` for steps." |
+| `INSUFFICIENT_CREDITS` / 402 | "You've used your free credits. Upgrade at https://admin.revenoid.com/p2p/billing or run `/revenoid:setup` for the full breakdown." |
+| `INVALID_API_KEY` / 401 / `revoked` | "Your API key isn't working. Mint a new one at https://admin.revenoid.com/p2p/settings and update `REVENOID_API_KEY`. Run `/revenoid:setup` for steps." |
 | `API key required` | "Run `/revenoid:setup` — the plugin can't see your API key env var." |
 
-Always end with a tab-acceptable recovery prompt like `/revenoid:setup` or `Open https://app.revenoid.com/p2p/pricing`.
+Always end with a tab-acceptable recovery prompt like `/revenoid:setup` or `Open https://admin.revenoid.com/p2p/billing`.

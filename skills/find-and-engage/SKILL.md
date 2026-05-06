@@ -81,9 +81,9 @@ Show each draft inline. Offer: "Want me to push these to your Outreach / Saleslo
 
 | Error contains… | Tell the user |
 |---|---|
-| `INSUFFICIENT_CREDITS` / 402 | "You've used your free credits. Upgrade at https://app.revenoid.com/p2p/pricing or run `/revenoid:setup`." |
-| `INVALID_API_KEY` / 401 / `revoked` | "Your API key isn't working. Mint a new one at https://app.revenoid.com/p2p/settings. Run `/revenoid:setup` for steps." |
+| `INSUFFICIENT_CREDITS` / 402 | "You've used your free credits. Upgrade at https://admin.revenoid.com/p2p/billing or run `/revenoid:setup`." |
+| `INVALID_API_KEY` / 401 / `revoked` | "Your API key isn't working. Mint a new one at https://admin.revenoid.com/p2p/settings. Run `/revenoid:setup` for steps." |
 | `API key required` | "Run `/revenoid:setup` — the plugin can't see your API key env var." |
-| `No ICP/Persona setting found` | "You don't have an ICP configured yet. Set one up at https://app.revenoid.com/p2p/onboarding (or click 'Create ICP' from your dashboard's Lead Gen AI page)." |
+| `No ICP/Persona setting found` | "You don't have an ICP configured yet. Set one up at https://admin.revenoid.com/p2p/onboarding (or click 'Create ICP' from your dashboard's Lead Gen AI page)." |
 
 Always end with a tab-acceptable recovery prompt like `/revenoid:setup` or the relevant dashboard link.

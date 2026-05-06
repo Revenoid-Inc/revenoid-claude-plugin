@@ -16,8 +16,8 @@ claude plugin install revenoid
 
 ### 2. Get an API key
 
-1. Sign up at **[app.revenoid.com](https://app.revenoid.com)** (Google / Microsoft SSO, or email).
-2. Open **Settings → API Keys** at [app.revenoid.com/p2p/settings](https://app.revenoid.com/p2p/settings).
+1. Sign up at **[admin.revenoid.com](https://admin.revenoid.com)** (Google / Microsoft SSO, or email).
+2. Open **Settings → API Keys** at [admin.revenoid.com/p2p/settings](https://admin.revenoid.com/p2p/settings).
 3. Click **New key**, name it (e.g. "Claude Code"), copy the value — it shows **only once**.
 
 ### 3. Set it as an env var
@@ -141,7 +141,7 @@ All 23 tools share your Revenoid credit pool — same as the in-app workspace.
 
 **Free tier**: 500 credits — enough for ~50 enrichments or ~10 account plans to evaluate.
 
-**Paid plans** start at $20/mo. Manage at [app.revenoid.com/p2p/pricing](https://app.revenoid.com/p2p/pricing).
+**Paid plans** start at $20/mo. Manage at [admin.revenoid.com/p2p/billing](https://admin.revenoid.com/p2p/billing).
 
 ---
 
@@ -151,10 +151,10 @@ All 23 tools share your Revenoid credit pool — same as the in-app workspace.
 Plugin's MCP server didn't start. Most likely the env var isn't set. Run `/revenoid:setup` — it will diagnose and walk you through.
 
 ### "Invalid API key" / 401
-Key was revoked or rotated. Mint a new one at [app.revenoid.com/p2p/settings](https://app.revenoid.com/p2p/settings) and update your env var. `/revenoid:setup` covers the steps.
+Key was revoked or rotated. Mint a new one at [admin.revenoid.com/p2p/settings](https://admin.revenoid.com/p2p/settings) and update your env var. `/revenoid:setup` covers the steps.
 
 ### "Insufficient credits"
-You've used your monthly allotment. Either wait for next month's reset, or upgrade at [app.revenoid.com/p2p/pricing](https://app.revenoid.com/p2p/pricing).
+You've used your monthly allotment. Either wait for next month's reset, or upgrade at [admin.revenoid.com/p2p/billing](https://admin.revenoid.com/p2p/billing).
 
 ### Everything else
 Run `/revenoid:setup` — it self-diagnoses. If still stuck, [open an issue](https://github.com/Revenoid-Inc/revenoid-claude-plugin/issues) with the error message and your `claude --version`.
@@ -173,7 +173,7 @@ The plugin runs a tiny stdio proxy locally that forwards every JSON-RPC tool cal
 
 | Env var | Required | Default | Notes |
 |---|---|---|---|
-| `REVENOID_API_KEY` | yes | — | `rvk_live_…` from app.revenoid.com → Settings → API Keys |
+| `REVENOID_API_KEY` | yes | — | `rvk_live_…` from admin.revenoid.com → Settings → API Keys |
 | `REVENOID_API_URL` | no | `https://core.revenoid.com` | Override for self-hosted / staging / local dev |
 
 ## Security

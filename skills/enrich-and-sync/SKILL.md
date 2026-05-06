@@ -91,10 +91,10 @@ End with a **"What's next?"** section containing EXACTLY 3 backtick-quoted promp
 
 | Error contains… | Tell the user |
 |---|---|
-| `INSUFFICIENT_CREDITS` / 402 | "Enrichment is the most credit-hungry tool. Upgrade at https://app.revenoid.com/p2p/pricing — Growth plan is $50/mo for 5,500 credits, ~500 enrichments. Or run `/revenoid:setup` for the full breakdown." |
+| `INSUFFICIENT_CREDITS` / 402 | "Enrichment is the most credit-hungry tool. Upgrade at https://admin.revenoid.com/p2p/billing — Growth plan is $50/mo for 5,500 credits, ~500 enrichments. Or run `/revenoid:setup` for the full breakdown." |
 | `INVALID_API_KEY` / 401 / `revoked` | "Your API key isn't working. Run `/revenoid:setup`." |
 | `API key required` | "Run `/revenoid:setup`." |
-| `No CRM connected` (for crm_query) | "No CRM connected for duplicate-check. Connect Salesforce or HubSpot at https://app.revenoid.com/settings/all-integrations, or skip the duplicate check and I'll just present the enriched list." |
+| `No CRM connected` (for crm_query) | "No CRM connected for duplicate-check. Connect Salesforce or HubSpot at https://admin.revenoid.com/settings/all-integrations, or skip the duplicate check and I'll just present the enriched list." |
 | Per-prospect enrichment failures (some succeed, some don't) | Show the partial-success table and call out which rows failed + why (no work email found / phone not in coverage / etc). Don't treat as a fatal error. |
 
 Always end with a tab-acceptable recovery prompt.

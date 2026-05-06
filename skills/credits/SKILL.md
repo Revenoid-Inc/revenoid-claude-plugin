@@ -23,8 +23,8 @@ Call **`get_credits`** (free, Mongo lookup only). The response shape:
   low_balance: <bool — true if remaining < 100>,
   is_admin_bridge: <bool — true if this is a bridged-enterprise stub with a placeholder 999999 value>,
   is_enterprise: <bool>,
-  billing_url: 'https://app.revenoid.com/p2p/pricing',
-  settings_url: 'https://app.revenoid.com/p2p/settings',
+  billing_url: 'https://admin.revenoid.com/p2p/billing',
+  settings_url: 'https://admin.revenoid.com/p2p/settings',
   message: <only present when stub or no-data>,
 }
 ```
@@ -56,7 +56,7 @@ If `is_admin_bridge: true`, show:
 >
 > You're on the enterprise tier (admin-bridged). The credit pool number isn't meaningful at the user level — your org has its own billing.
 >
-> See **org-level usage** at https://app.revenoid.com/analytics/usage-tool — that's the real number for enterprise plans.
+> See **org-level usage** at https://admin.revenoid.com/analytics/usage-tool — that's the real number for enterprise plans.
 
 Use the `message` field from the response verbatim if it's helpful.
 
@@ -77,14 +77,14 @@ End with **"What's next?"** — pick prompts contextual to their state. Examples
 
 **Low balance:**
 ```
-- `Open https://app.revenoid.com/p2p/pricing`
+- `Open https://admin.revenoid.com/p2p/billing`
 - `Use only free tools — show me what I can do without spending credits`
 - `/revenoid:setup` (verify everything's working)
 ```
 
 **Enterprise / bridge:**
 ```
-- `Open https://app.revenoid.com/analytics/usage-tool`
+- `Open https://admin.revenoid.com/analytics/usage-tool`
 - `Find me 10 accounts that match my ICP`
 - `/revenoid:help`
 ```

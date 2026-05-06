@@ -77,7 +77,7 @@ Mention the plan is saved to the dashboard's Generated Outputs section, then end
 
 | Error contains… | Tell the user |
 |---|---|
-| `INSUFFICIENT_CREDITS` / 402 | "Account plan generation needs more credits than you have. Upgrade at https://app.revenoid.com/p2p/pricing — Pro plan is $100/mo for 11K credits, comfortable for 30+ account plans/mo." |
+| `INSUFFICIENT_CREDITS` / 402 | "Account plan generation needs more credits than you have. Upgrade at https://admin.revenoid.com/p2p/billing — Pro plan is $100/mo for 11K credits, comfortable for 30+ account plans/mo." |
 | `INVALID_API_KEY` / 401 / `revoked` | "Your API key isn't working. Run `/revenoid:setup`." |
 | `API key required` | "Run `/revenoid:setup` — the plugin can't see your API key env var." |
 | `enrichment_required` (rare for accountplan) | "The agent needs a researched stakeholder. This shouldn't happen for accountplan — try again, or report at https://github.com/Revenoid-Inc/revenoid-claude-plugin/issues" |

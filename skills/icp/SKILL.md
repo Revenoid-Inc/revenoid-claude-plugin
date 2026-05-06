@@ -61,7 +61,7 @@ End with a **"What's next?"** section containing EXACTLY 3 backtick-quoted promp
 
 - `Find me 10 accounts using my current ICP`
 - `Switch to my "<other ICP name>" ICP`
-- `Update my ICP keywords at https://app.revenoid.com/research-ai/signals-pitch`
+- `Update my ICP keywords at https://admin.revenoid.com/research-ai/signals-pitch`
 
 If the user only has 1 ICP, replace prompt #2 with `Find prospects at <some company> with my current persona settings`.
 
