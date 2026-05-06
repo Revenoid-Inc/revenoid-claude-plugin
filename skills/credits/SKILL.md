@@ -1,39 +1,97 @@
 ---
-description: Show the user's current Revenoid credit balance and plan. Manual-only — user must explicitly type /revenoid:credits.
+description: Show the user's current Revenoid credit balance, plan tier, and usage. Manual-only — user must explicitly type /revenoid:credits.
 disable-model-invocation: true
 ---
 
 # Credits & plan
 
-User invoked `/revenoid:credits`. Pull current account state and present it cleanly.
+User invoked `/revenoid:credits`. Return their real credit balance, plan, and usage so they know whether they can afford the next workflow.
 
 ## Step 1 — Fetch the data
 
-The full credit / plan picture is on the user's account record but isn't surfaced by `get_company_info` directly. The plan + plan_status + credit balance are visible to the user in the dashboard's `/p2p/billing` page. Since there's no MCP tool that reads credits today, **be honest with the user**:
+Call **`get_credits`** (free, Mongo lookup only). The response shape:
 
-> *Credit balance + plan details aren't yet exposed via MCP — I can't read them from here. To see them right now:*
+```
+{
+  credits: <number remaining>,
+  plan: 'free' | 'starter' | 'growth' | 'pro' | 'scale',
+  plan_display: 'Free' | 'Starter' | 'Growth' | 'Pro' | 'Scale',
+  plan_status: 'active' | 'past_due' | 'canceled',
+  plan_quota: <total monthly credits the plan ships with>,
+  credits_used: <plan_quota - credits>,
+  usage_pct: <0-100>,
+  low_balance: <bool — true if remaining < 100>,
+  is_admin_bridge: <bool — true if this is a bridged-enterprise stub with a placeholder 999999 value>,
+  is_enterprise: <bool>,
+  billing_url: 'https://app.revenoid.com/p2p/pricing',
+  settings_url: 'https://app.revenoid.com/p2p/settings',
+  message: <only present when stub or no-data>,
+}
+```
+
+## Step 2 — Branch on what's there
+
+### Branch A — real P2P credit pool (most users)
+
+If `is_admin_bridge: false` and `is_enterprise: false`, show:
+
+> ### 💳 Credits & plan
 >
-> *- Open https://app.revenoid.com/p2p/billing to see your remaining balance, plan tier, and usage breakdown by category*
-> *- Or, if you'd like a CLI-style answer, you can run a free tool to confirm your account is connected:*
+> **Plan**: <plan_display> · <plan_status>
+> **Remaining**: <credits> / <plan_quota> credits (<100 - usage_pct>% available)
+>
+> Usage bar (use a 20-char filled/empty visual, e.g. `█████░░░░░░░░░░░░░░░ 25%`)
 
-## Step 2 — Confirm the account is connected
+If `low_balance: true` (under 100 credits left), add a yellow ⚠️ note:
 
-Call **`get_company_info`** (free, no credit charge). Show the user:
-- Their resolved company name + ICP setting (proves the API key is valid + connected)
-- Their connected integrations
-- Tracked signal count
+> ⚠️ Running low — heavy workflows like `account-plan` or bulk `enrich_contacts` may exhaust your balance. Top up at <billing_url>.
 
-## Step 3 — Present + suggest next moves
+If `usage_pct > 80`, suggest considering an upgrade.
 
-End with a **"What's next?"** section containing EXACTLY 3 backtick-quoted prompts on their own lines. Backtick-quoted prompts render as tab-acceptable suggestions in Claude Code:
+### Branch B — admin-bridge stub (enterprise via P2P bridge)
 
-## What's next?
+If `is_admin_bridge: true`, show:
 
+> ### 💳 Enterprise account
+>
+> You're on the enterprise tier (admin-bridged). The credit pool number isn't meaningful at the user level — your org has its own billing.
+>
+> See **org-level usage** at https://app.revenoid.com/analytics/usage-tool — that's the real number for enterprise plans.
+
+Use the `message` field from the response verbatim if it's helpful.
+
+### Branch C — no data
+
+If `credits === null` and `is_enterprise: true`, show the `message` field verbatim and offer the `analytics/usage-tool` link.
+
+## Step 3 — Suggest next moves
+
+End with **"What's next?"** — pick prompts contextual to their state. Examples:
+
+**Healthy balance:**
+```
+- `Find me 10 accounts that match my ICP`
 - `Show me my saved messaging agents`
-- `Switch my active ICP setting`
-- `Find me 10 net-new accounts using my current ICP`
+- `Brief me on my next call`
+```
+
+**Low balance:**
+```
+- `Open https://app.revenoid.com/p2p/pricing`
+- `Use only free tools — show me what I can do without spending credits`
+- `/revenoid:setup` (verify everything's working)
+```
+
+**Enterprise / bridge:**
+```
+- `Open https://app.revenoid.com/analytics/usage-tool`
+- `Find me 10 accounts that match my ICP`
+- `/revenoid:help`
+```
 
 ## Notes for the model
 
-- Don't fabricate credit numbers — if the data isn't available via MCP, say so.
-- This skill is intentionally short. Most users wanting "how am I doing on credits" want a one-line answer + the dashboard link, not a deep dive.
+- This is the most-asked utility — keep the answer under 100 words. Users want a number, not a tutorial.
+- For real P2P users with low_balance: true, lead with the warning so they can adjust before kicking off a workflow that might cost more than they have.
+- For admin_bridge: don't quote the placeholder credit number (999999 is not user-friendly and meaningless) — just say "enterprise" and route to org usage.
+- If `get_credits` itself fails (API key broken, etc.), fall through to `/revenoid:setup` for diagnostics — same recovery path as every other skill.
