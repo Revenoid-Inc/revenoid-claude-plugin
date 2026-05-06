@@ -54,6 +54,8 @@ Restart Claude Code (`/exit` then `claude` again — env vars only load on launc
 
 You should see ✅ "You're connected to Revenoid" with your account profile. If not, the setup skill self-diagnoses and walks you through whatever's wrong.
 
+> **Heads-up about updates:** When the plugin's MCP server adds new tools (we ship roughly weekly), `/reload-plugins` is enough for skill updates but **not** for new tools. Fully restart Claude Code (`/exit` then `claude`) so it reconnects the MCP server and picks up the latest tool list. Check `/revenoid:setup` if anything looks stale.
+
 ---
 
 ## What you can do
