@@ -1,36 +1,86 @@
-# Revenoid — AI Sales Workflow Plugin for Claude Code
+# Revenoid — AI Sales Workflow for Claude Code
 
-> Discover, research, enrich, and engage prospects through 23 unified tools spanning Salesforce, HubSpot, Google Calendar, Microsoft 365, Gong, Chorus, Avoma, Coresignal, Apollo, and Fiber AI — with built-in Messaging Agents that draft outreach in your voice.
+> **Discover, research, enrich, and engage prospects through 23 unified tools** spanning Salesforce, HubSpot, Google Calendar, Microsoft 365, Gong, Chorus, Avoma, Coresignal, Apollo, and Fiber AI — with built-in Messaging Agents that draft outreach in your voice.
 
-## Install
+**Free plan ships with 500 credits.** No credit card required.
+
+---
+
+## Quick start (3 minutes)
+
+### 1. Install
 
 ```bash
-claude /plugin install revenoid
+claude plugin install revenoid
 ```
 
-Once installed, set your Revenoid API key:
+### 2. Get an API key
 
+1. Sign up at **[app.revenoid.com](https://app.revenoid.com)** (Google / Microsoft SSO, or email).
+2. Open **Settings → API Keys** at [app.revenoid.com/p2p/settings](https://app.revenoid.com/p2p/settings).
+3. Click **New key**, name it (e.g. "Claude Code"), copy the value — it shows **only once**.
+
+### 3. Set it as an env var
+
+**zsh** (macOS default):
 ```bash
-export REVENOID_API_KEY=rvk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+echo 'export REVENOID_API_KEY="rvk_live_..."' >> ~/.zshrc
+source ~/.zshrc
 ```
 
-(Get a key at [app.revenoid.com](https://app.revenoid.com) → Settings → API Keys. Free plan ships with 500 credits.)
+**bash**:
+```bash
+echo 'export REVENOID_API_KEY="rvk_live_..."' >> ~/.bashrc
+source ~/.bashrc
+```
 
-Then start Claude Code. The plugin auto-loads.
+**fish**:
+```bash
+set -Ux REVENOID_API_KEY "rvk_live_..."
+```
+
+**Windows PowerShell**:
+```powershell
+[Environment]::SetEnvironmentVariable("REVENOID_API_KEY", "rvk_live_...", "User")
+```
+
+### 4. Verify
+
+Restart Claude Code (`/exit` then `claude` again — env vars only load on launch). Then run:
+
+```
+/revenoid:setup
+```
+
+You should see ✅ "You're connected to Revenoid" with your account profile. If not, the setup skill self-diagnoses and walks you through whatever's wrong.
+
+---
 
 ## What you can do
 
-The plugin ships with five **skills** that Claude Code invokes automatically based on what you describe:
+The plugin ships with **9 task-oriented skills** that Claude Code invokes automatically based on what you describe:
 
 | Say something like… | Skill that fires | What happens |
 |---|---|---|
-| *"Prospect Anthropic for me"* | `prospect-account` | Resolves the company → scores it → finds prospects → enriches with verified emails → returns ranked contact list |
-| *"Brief me on my next call"* | `pre-call-prep` | Pulls the meeting from your calendar → researches the company + attendees → searches past Gong/Chorus calls → generates a callprep brief |
-| *"Find me 10 cybersecurity SaaS companies"* | `find-and-engage` | Discovers net-new accounts based on your saved ICP → optionally finds prospects + drafts outreach |
-| *"Build an account plan for OpenAI"* | `account-plan` | Researches the account → kicks off async accountplan generation via your trained agent → polls until done |
-| *"Enrich the top 5 prospects you found"* | `enrich-and-sync` | Adds verified work email (+ optionally phone, personal email) → checks against your CRM for duplicates |
+| *"Prospect Anthropic for me"* | `/revenoid:prospect-account` | Resolves the company → scores it → finds prospects → enriches with verified emails → returns ranked contact list |
+| *"Brief me on my next call"* | `/revenoid:pre-call-prep` | Pulls the meeting from your calendar → researches the company + attendees → searches past Gong/Chorus calls → generates a callprep brief |
+| *"Find me 10 cybersecurity SaaS companies"* | `/revenoid:find-and-engage` | Discovers net-new accounts based on your saved ICP → optionally finds prospects + drafts outreach |
+| *"Build an account plan for OpenAI"* | `/revenoid:account-plan` | Researches the account → kicks off async accountplan generation via your trained agent → polls until done (3–7 min) |
+| *"Enrich the top 5 prospects you found"* | `/revenoid:enrich-and-sync` | Adds verified work email (+ optionally phone, personal email) → checks against your CRM for duplicates |
 
-You can also call the underlying 23 tools directly if you want fine-grained control.
+Plus **utility commands** for direct control:
+
+| Command | What it does |
+|---|---|
+| `/revenoid:help` | Catalogue of example prompts. Try `/revenoid:help tools` for the full 23-tool list. |
+| `/revenoid:setup` | First-run + diagnostics (run this if anything seems off) |
+| `/revenoid:credits` | Credit balance + plan info |
+| `/revenoid:agents [type]` | List your saved messaging agents (filter by type: email, callprep, etc.) |
+| `/revenoid:icp [name]` | Show / switch your active ICP setting |
+
+You can also call any of the 23 underlying MCP tools directly if you want fine-grained control.
+
+---
 
 ## The 23 tools
 
@@ -73,20 +123,41 @@ You can also call the underlying 23 tools directly if you want fine-grained cont
 ### ⏱️ Async polling (1)
 - `get_job_status` — poll heavy generations (accountplan, pptPresentation)
 
+---
+
 ## Pricing
 
-All 23 tools share your Revenoid credit pool — same as the in-app workspace. The Free plan ships with 500 credits to try the full surface.
+All 23 tools share your Revenoid credit pool — same as the in-app workspace.
 
 | Tool category | Cost |
 |---|---|
-| `get_company_info`, `search_call_transcripts`, `crm_query`, `get_calendar_events`, `list_*` | Free — Mongo / OAuth lookups |
-| `find_accounts`, `find_prospects`, `find_person`, `research_account`, `lookup_company`, `lookup_domain` | Per-call — Fiber AI |
-| `lookup_person`, `lookup_email` | Per-call — Fiber AI |
-| `enrich_contacts` | Per channel (work email / personal email / phone) |
-| `lookup_linkedin_posts`, `find_job_postings`, `find_prospects_by_career_history` | Per-call — Coresignal |
-| `generate_message` (any type) | Per-call — ML inference |
+| `get_company_info`, `search_call_transcripts`, `crm_query`, `get_calendar_events`, all `list_*` tools | **Free** |
+| Fiber/Apollo lookups, person/company lookups, account research | Per call |
+| `enrich_contacts` | Per channel (work email / personal / phone) |
+| Coresignal calls (LinkedIn posts, job postings, career-history search) | Per call |
+| `generate_message` (any type) | Per call |
 
-Buy more credits at [app.revenoid.com/p2p/pricing](https://app.revenoid.com/p2p/pricing).
+**Free tier**: 500 credits — enough for ~50 enrichments or ~10 account plans to evaluate.
+
+**Paid plans** start at $20/mo. Manage at [app.revenoid.com/p2p/pricing](https://app.revenoid.com/p2p/pricing).
+
+---
+
+## Troubleshooting
+
+### "No revenoid tools available"
+Plugin's MCP server didn't start. Most likely the env var isn't set. Run `/revenoid:setup` — it will diagnose and walk you through.
+
+### "Invalid API key" / 401
+Key was revoked or rotated. Mint a new one at [app.revenoid.com/p2p/settings](https://app.revenoid.com/p2p/settings) and update your env var. `/revenoid:setup` covers the steps.
+
+### "Insufficient credits"
+You've used your monthly allotment. Either wait for next month's reset, or upgrade at [app.revenoid.com/p2p/pricing](https://app.revenoid.com/p2p/pricing).
+
+### Everything else
+Run `/revenoid:setup` — it self-diagnoses. If still stuck, [open an issue](https://github.com/Revenoid-Inc/revenoid-claude-plugin/issues) with the error message and your `claude --version`.
+
+---
 
 ## How it works
 
@@ -94,16 +165,14 @@ Buy more credits at [app.revenoid.com/p2p/pricing](https://app.revenoid.com/p2p/
 Claude Code  →  npx @revenoid/mcp-server (stdio)  →  HTTPS  →  core.revenoid.com/api/v2/mcp  →  23 tools
 ```
 
-The plugin runs a tiny stdio proxy locally (via `npx @revenoid/mcp-server`) that forwards every JSON-RPC tool call to Revenoid's MCP endpoint over HTTPS, attaching your API key. No data ever leaves your laptop except through that one authenticated channel.
+The plugin runs a tiny stdio proxy locally that forwards every JSON-RPC tool call to Revenoid's MCP endpoint over HTTPS, attaching your API key. **No data leaves your machine except through that one authenticated channel.**
 
 ## Configuration
 
-Two environment variables:
-
-| Var | Required | Default | Notes |
+| Env var | Required | Default | Notes |
 |---|---|---|---|
 | `REVENOID_API_KEY` | yes | — | `rvk_live_…` from app.revenoid.com → Settings → API Keys |
-| `REVENOID_API_URL` | no | `https://core.revenoid.com` | Override for self-hosted / staging / local dev (`http://localhost:8000`) |
+| `REVENOID_API_URL` | no | `https://core.revenoid.com` | Override for self-hosted / staging / local dev |
 
 ## Security
 
@@ -114,9 +183,9 @@ Two environment variables:
 
 ## Support
 
-- Docs: [revenoid.com/mcp](https://revenoid.com/mcp)
-- Issues: [github.com/Revenoid-Inc/revenoid-claude-plugin/issues](https://github.com/Revenoid-Inc/revenoid-claude-plugin/issues)
-- Email: [support@revenoid.com](mailto:support@revenoid.com)
+- 📚 Docs: [revenoid.com/mcp](https://revenoid.com/mcp)
+- 🐛 Issues: [github.com/Revenoid-Inc/revenoid-claude-plugin/issues](https://github.com/Revenoid-Inc/revenoid-claude-plugin/issues)
+- 📧 Email: [support@revenoid.com](mailto:support@revenoid.com)
 
 ## License
 

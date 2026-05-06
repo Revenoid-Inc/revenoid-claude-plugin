@@ -1,0 +1,14 @@
+{
+  "name": "revenoid",
+  "owner": {
+    "name": "Revenoid",
+    "url": "https://revenoid.com"
+  },
+  "description": "Local development marketplace for the Revenoid Claude Code plugin",
+  "plugins": [
+    {
+      "name": "revenoid",
+      "source": "./"
+    }
+  ]
+}

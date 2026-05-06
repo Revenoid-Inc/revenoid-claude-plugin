@@ -59,15 +59,28 @@ Format the plan response from `result` into a clean, scannable structure. The ac
 - **Initial hypothesis** — pain points + Revenoid angle
 - **3 recommended plays** — with cited reasoning
 
-Add at the end:
+Mention the plan is saved to the dashboard's Generated Outputs section, then end with a **"What's next?"** section containing EXACTLY 3 backtick-quoted prompts on their own lines. Backtick-quoted prompts render as tab-acceptable suggestions in Claude Code — each MUST be a complete, ready-to-send prompt. Pick three follow-ups that build on the plan you just generated (refer to the actual leaders / signals named in the plan):
 
-> *Plan saved to your dashboard's [Generated Outputs] section. Want me to:*
-> - *Find the right people to outreach to (use prospect-account)?*
-> - *Pull recent LinkedIn posts from the named leaders?*
-> - *Draft a callprep brief for one of them?*
+## What's next?
+
+- `Prospect <Company> — top 5 contacts with verified emails`
+- `Brief me on <Sales Leader from the plan> before reaching out`
+- `Pull the last 30 days of LinkedIn posts from <CEO from the plan>`
 
 ## Notes for the model
 
 - Step 4's polling: don't busy-loop. Call `get_job_status` once every 30 seconds — Claude Code can run other tools or chat in between if the user wants.
 - If the user has more than one `accountplan` agent, mention that and offer to use a specific one ("I have callprep, accountplan, and PPT presentation agents — which would you like for this?").
 - Do NOT call `generate_message(accountplan)` twice for the same company in the same conversation — it caches inside the in-app workspace, and the result from one call serves multiple requests. If the user asks to "regenerate", explain that's a different request and confirm they want a fresh run.
+
+## Error handling
+
+| Error contains… | Tell the user |
+|---|---|
+| `INSUFFICIENT_CREDITS` / 402 | "Account plan generation needs more credits than you have. Upgrade at https://app.revenoid.com/p2p/pricing — Pro plan is $100/mo for 11K credits, comfortable for 30+ account plans/mo." |
+| `INVALID_API_KEY` / 401 / `revoked` | "Your API key isn't working. Run `/revenoid:setup`." |
+| `API key required` | "Run `/revenoid:setup` — the plugin can't see your API key env var." |
+| `enrichment_required` (rare for accountplan) | "The agent needs a researched stakeholder. This shouldn't happen for accountplan — try again, or report at https://github.com/Revenoid-Inc/revenoid-claude-plugin/issues" |
+| `status: 'failed'` from get_job_status | Surface the `error` field from the job + offer "try again with a different agent" — agent issues sometimes resolve when the user picks a different `accountplan` agent. |
+
+Always end with a tab-acceptable recovery prompt.

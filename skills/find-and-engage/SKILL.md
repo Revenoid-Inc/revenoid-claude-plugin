@@ -43,13 +43,13 @@ For path B (sync), show a clean table:
 |---|---------|----------|----------|-----------|
 | ... | ... | ... | ... | ... |
 
-End with the next-step prompt:
+End with a **"What's next?"** section containing EXACTLY 3 backtick-quoted prompts on their own lines. Backtick-quoted prompts get rendered as tab-acceptable suggestions in Claude Code — each MUST be a complete, ready-to-send prompt. Reference specific accounts from the result table (by row number or name) so the suggestions are tightly contextual. Example shape:
 
-> "Want me to:
-> - Find prospects at any of these → say 'prospect #3' (runs full prospect-account workflow)
-> - Score one of them → say 'research #5' (runs research_account)
-> - Find more → say 'show me 10 more'
-> - Or pick a specific subset and I'll draft outreach to all of them"
+## What's next?
+
+- `Prospect #3 (<that row's company name>) — top 5 contacts with verified emails`
+- `Research #1 — full account intel + buying signals`
+- `Show me 10 more accounts with the same filters`
 
 ## Step 4 — If user picks specific accounts to engage
 
@@ -76,3 +76,14 @@ Show each draft inline. Offer: "Want me to push these to your Outreach / Saleslo
 - Default to path B unless the user explicitly mentions signals.
 - `find_accounts` defaults to `freshness: true` which excludes already-saved companies. The first run on a fresh org may surface 0 results if their saved list is huge — if so, suggest `freshness: false` to see the original page-1 set.
 - Don't enrich speculatively — only when the user picks specific accounts. Enrichment is the most expensive step.
+
+## Error handling
+
+| Error contains… | Tell the user |
+|---|---|
+| `INSUFFICIENT_CREDITS` / 402 | "You've used your free credits. Upgrade at https://app.revenoid.com/p2p/pricing or run `/revenoid:setup`." |
+| `INVALID_API_KEY` / 401 / `revoked` | "Your API key isn't working. Mint a new one at https://app.revenoid.com/p2p/settings. Run `/revenoid:setup` for steps." |
+| `API key required` | "Run `/revenoid:setup` — the plugin can't see your API key env var." |
+| `No ICP/Persona setting found` | "You don't have an ICP configured yet. Set one up at https://app.revenoid.com/p2p/onboarding (or click 'Create ICP' from your dashboard's Lead Gen AI page)." |
+
+Always end with a tab-acceptable recovery prompt like `/revenoid:setup` or the relevant dashboard link.

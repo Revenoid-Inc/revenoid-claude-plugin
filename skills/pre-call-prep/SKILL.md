@@ -77,7 +77,13 @@ Format for the user:
 >
 > *[Inline content from generate_message]*
 
-End with: "Want me to also draft a follow-up email template for after the call?"
+End with a **"What's next?"** section containing EXACTLY 3 backtick-quoted prompts on their own lines. Backtick-quoted prompts render as tab-acceptable suggestions in Claude Code — each MUST be a complete, ready-to-send prompt. Pick the three best follow-ups given the brief you just produced. Example shape (adapt content to actual meeting):
+
+## What's next?
+
+- `Draft a post-call follow-up email template using my callprep agent`
+- `Search past calls for any open commitments from <Company>`
+- `Pull more LinkedIn posts from <attendee> for warm-up material`
 
 ## Notes for the model
 
@@ -85,3 +91,15 @@ End with: "Want me to also draft a follow-up email template for after the call?"
 - `lookup_linkedin_posts` is paid per call — cap to 3 attendees max, even if more are on the meeting.
 - If the user has no calendar connected (`get_calendar_events` returns nothing), fall back to asking them to name the company + the people, then run from step 2.
 - Skip step 4b (LinkedIn posts) entirely if Coresignal isn't returning useful posts for this profile (low engagement, dormant feed).
+
+## Error handling
+
+If any tool call returns an error, recognize the pattern and route the user to the right recovery — DON'T just surface a raw error message and stop:
+
+| Error contains… | Tell the user |
+|---|---|
+| `INSUFFICIENT_CREDITS` / 402 | "You've used your free credits. Upgrade at https://app.revenoid.com/p2p/pricing or run `/revenoid:setup` for the full breakdown." |
+| `INVALID_API_KEY` / 401 / `revoked` | "Your API key isn't working. Mint a new one at https://app.revenoid.com/p2p/settings and update `REVENOID_API_KEY`. Run `/revenoid:setup` for steps." |
+| `API key required` | "Run `/revenoid:setup` — the plugin can't see your API key env var." |
+
+Always end with a tab-acceptable recovery prompt like `/revenoid:setup` or `Open https://app.revenoid.com/p2p/pricing`.

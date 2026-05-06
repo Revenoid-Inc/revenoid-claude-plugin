@@ -71,8 +71,30 @@ If the user wants to push the net-new contacts to their CRM:
 
 > "Pushing to CRM from MCP isn't wired yet — you can either (a) push from the dashboard's Lead Gen AI page where these prospects are now saved, or (b) export and bulk-import. Want me to flag this as a tool we should build next?"
 
+## Step 6 — Suggest next moves
+
+End with a **"What's next?"** section containing EXACTLY 3 backtick-quoted prompts on their own lines. Backtick-quoted prompts render as tab-acceptable suggestions in Claude Code — each MUST be a complete, ready-to-send prompt. Pick three based on what you just enriched (reference real names from the result table):
+
+## What's next?
+
+- `Draft cold emails to the net-new contacts using my SDR email agent`
+- `Pull LinkedIn posts from <prospect name> for a personalized angle`
+- `Show me 5 more prospects at the same companies`
+
 ## Notes for the model
 
 - Step 1.c (find_person) charges per call. Only batch-resolve if the user clearly wants it — otherwise ask them to use prospect-account or find-and-engage flows that already produce IDs.
 - Don't enrich speculatively. If the user said "find me prospects at Acme" but didn't ask to enrich, don't run this skill — just present the unenriched list and ask.
 - `enrich_contacts` with `getPhoneNumbers: true` is the most expensive line item. Only flip it on with explicit user consent.
+
+## Error handling
+
+| Error contains… | Tell the user |
+|---|---|
+| `INSUFFICIENT_CREDITS` / 402 | "Enrichment is the most credit-hungry tool. Upgrade at https://app.revenoid.com/p2p/pricing — Growth plan is $50/mo for 5,500 credits, ~500 enrichments. Or run `/revenoid:setup` for the full breakdown." |
+| `INVALID_API_KEY` / 401 / `revoked` | "Your API key isn't working. Run `/revenoid:setup`." |
+| `API key required` | "Run `/revenoid:setup`." |
+| `No CRM connected` (for crm_query) | "No CRM connected for duplicate-check. Connect Salesforce or HubSpot at https://app.revenoid.com/settings/all-integrations, or skip the duplicate check and I'll just present the enriched list." |
+| Per-prospect enrichment failures (some succeed, some don't) | Show the partial-success table and call out which rows failed + why (no work email found / phone not in coverage / etc). Don't treat as a fatal error. |
+
+Always end with a tab-acceptable recovery prompt.

@@ -58,7 +58,13 @@ Once enriched, give the user a clean table:
 
 End with:
 - A pointer back to the `score` and the strongest signal
-- An offer: "Want me to draft an email to the top 3 using your messaging agent?"
+- A **"What's next?"** section with EXACTLY 3 backtick-quoted prompts on their own lines. Backtick-quoted prompts get rendered as tab-acceptable suggestions in Claude Code, so each one MUST be a complete, ready-to-send prompt the user could fire as their next turn. Pick the three most useful follow-ups for the prospect list you just produced. Example shape (adapt content to actual results):
+
+  ## What's next?
+
+  - `Draft cold emails to the top 3 using my SDR email agent`
+  - `Pull LinkedIn posts for prospect #1 to find a personalized angle`
+  - `Build a strategic account plan for <Company>`
 
 ## Notes for the model
 
@@ -66,3 +72,21 @@ End with:
 - If `lookup_company` fails or returns 0 results, fall back to `research_account({ companyName: $ARGUMENTS })` and skip step 1.
 - All four tools charge credits. Don't run them speculatively — only when the user has clearly named a target company.
 - If the user says "prospect" without naming a company, ask them to specify.
+
+## Error handling (applies to every step)
+
+If any tool call returns an error, recognize the pattern and route the user to the right recovery — DON'T just surface a raw error message and stop:
+
+| Error contains… | Diagnosis | Tell the user |
+|---|---|---|
+| `INSUFFICIENT_CREDITS` or HTTP 402 | Out of free credits | "You've used your free credits. Upgrade at https://app.revenoid.com/p2p/pricing — Starter plan is $20/mo for 2,000 credits. Or run `/revenoid:setup` for the full breakdown." |
+| `INVALID_API_KEY` / `API key has been revoked` / 401 | Key is bad or revoked | "Your API key isn't working — likely revoked or rotated. Mint a new one at https://app.revenoid.com/p2p/settings and update your `REVENOID_API_KEY` env var. Run `/revenoid:setup` for step-by-step." |
+| `API key required` (no auth header) | Env var not set | "Run `/revenoid:setup` — looks like the plugin's MCP server can't see your API key." |
+| Anything else | Unknown error | Surface the error message verbatim + suggest running `/revenoid:setup` to verify connectivity. |
+
+After surfacing the error, ALSO offer the recovery path as a tab-acceptable suggestion:
+
+```
+- `/revenoid:setup`
+- `Open https://app.revenoid.com/p2p/pricing`
+```
