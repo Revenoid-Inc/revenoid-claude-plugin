@@ -55,7 +55,7 @@ This is the canonical first-run flow. Walk the user through three numbered steps
 >
 > #### 1. Sign up (2 min)
 >
-> Go to **https://admin.revenoid.com** and create an account (Google / Microsoft SSO works, or email). Complete the onboarding flow that asks about your ICP — that powers most of the tools you're about to use.
+> Go to **https://admin.revenoid.com/p2p/signup** and create an account (Google / Microsoft SSO works, or email). Complete the onboarding flow that asks about your ICP — that powers most of the tools you're about to use.
 >
 > #### 2. Generate an API key (30 sec)
 >

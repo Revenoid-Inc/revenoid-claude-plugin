@@ -16,7 +16,7 @@ claude plugin install revenoid
 
 ### 2. Get an API key
 
-1. Sign up at **[admin.revenoid.com](https://admin.revenoid.com)** (Google / Microsoft SSO, or email).
+1. Sign up at **[admin.revenoid.com/p2p/signup](https://admin.revenoid.com/p2p/signup)** (Google / Microsoft SSO, or email).
 2. Open **Settings → API Keys** at [admin.revenoid.com/p2p/settings](https://admin.revenoid.com/p2p/settings).
 3. Click **New key**, name it (e.g. "Claude Code"), copy the value — it shows **only once**.
 
