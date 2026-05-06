@@ -185,7 +185,7 @@ The plugin runs a tiny stdio proxy locally that forwards every JSON-RPC tool cal
 
 ## Support
 
-- 📚 Docs: [revenoid.com/mcp](https://revenoid.com/mcp)
+- 📚 Docs: [revenoid.com](https://revenoid.com)
 - 🐛 Issues: [github.com/Revenoid-Inc/revenoid-claude-plugin/issues](https://github.com/Revenoid-Inc/revenoid-claude-plugin/issues)
 - 📧 Email: [support@revenoid.com](mailto:support@revenoid.com)
 
