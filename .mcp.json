@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "revenoid": {
+      "command": "npx",
+      "args": ["-y", "@revenoid/mcp-server"],
+      "env": {
+        "REVENOID_API_KEY": "${REVENOID_API_KEY}",
+        "REVENOID_API_URL": "${REVENOID_API_URL:-https://core.revenoid.com}"
+      }
+    }
+  }
+}
