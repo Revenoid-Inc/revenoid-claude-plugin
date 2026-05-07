@@ -1,6 +1,6 @@
 # Revenoid — AI Sales Workflow for Claude Code
 
-> **Discover, research, enrich, and engage prospects through 23 unified tools** spanning Salesforce, HubSpot, Google Calendar, Microsoft 365, Gong, Chorus, Avoma, Coresignal, Apollo, and Fiber AI — with built-in Messaging Agents that draft outreach in your voice.
+> **Discover, research, enrich, engage, and write back to your CRM through 26 unified tools** spanning Salesforce, HubSpot, Google Calendar, Microsoft 365, Gong, Chorus, Avoma, Coresignal, Apollo, and Fiber AI — with built-in Messaging Agents that draft outreach in your voice.
 
 **Free plan ships with 500 credits.** No credit card required.
 
@@ -74,17 +74,17 @@ Plus **utility commands** for direct control:
 
 | Command | What it does |
 |---|---|
-| `/revenoid:help` | Catalogue of example prompts. Try `/revenoid:help tools` for the full 23-tool list. |
+| `/revenoid:help` | Catalogue of example prompts. Try `/revenoid:help tools` for the full 26-tool list. |
 | `/revenoid:setup` | First-run + diagnostics (run this if anything seems off) |
 | `/revenoid:credits` | Credit balance + plan info |
 | `/revenoid:agents [type]` | List your saved messaging agents (filter by type: email, callprep, etc.) |
 | `/revenoid:icp [name]` | Show / switch your active ICP setting |
 
-You can also call any of the 23 underlying MCP tools directly if you want fine-grained control.
+You can also call any of the 26 underlying MCP tools directly if you want fine-grained control.
 
 ---
 
-## The 23 tools
+## The 26 tools
 
 ### 🎯 Discover & qualify (7)
 - `get_company_info` — your saved ICP, persona, integrations, signals (free)
@@ -111,8 +111,9 @@ You can also call any of the 23 underlying MCP tools directly if you want fine-g
 - `get_calendar_events` — your Google Calendar / Microsoft 365 schedule
 - `get_calendar_stakeholders` — find calendar attendees from a target domain
 
-### 💼 CRM (1)
+### 💼 CRM (2)
 - `crm_query` — query Salesforce or HubSpot (auto-detects which is connected)
+- `crm_push_contacts` — batch upsert contacts to the connected CRM (Salesforce upserts by Email; HubSpot search-then-PATCH-or-POST). Per-contact error isolation, dryRun supported.
 
 ### ✍️ Outreach generation (2)
 - `list_messaging_agents` — list your trained messaging agents
@@ -122,8 +123,9 @@ You can also call any of the 23 underlying MCP tools directly if you want fine-g
 - `list_saved_sequences` — your outreach sequences across CRMs
 - `list_icp_settings` — switch between saved ICPs
 
-### ⏱️ Async polling (1)
+### ⏱️ Async polling (2)
 - `get_job_status` — poll heavy generations (accountplan, pptPresentation)
+- `get_lead_list` — poll a Lead Gen list by `rawListId` (companion to `find_accounts_by_signals` which is already-async). Returns status + prospects once the background job lands.
 
 ---
 
@@ -164,7 +166,7 @@ Run `/revenoid:setup` — it self-diagnoses. If still stuck, [open an issue](htt
 ## How it works
 
 ```
-Claude Code  →  npx @revenoid/mcp-server (stdio)  →  HTTPS  →  core.revenoid.com/api/v2/mcp  →  23 tools
+Claude Code  →  npx @revenoid/mcp-server (stdio)  →  HTTPS  →  core.revenoid.com/api/v2/mcp  →  26 tools
 ```
 
 The plugin runs a tiny stdio proxy locally that forwards every JSON-RPC tool call to Revenoid's MCP endpoint over HTTPS, attaching your API key. **No data leaves your machine except through that one authenticated channel.**

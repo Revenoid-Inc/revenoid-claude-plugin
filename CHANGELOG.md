@@ -14,6 +14,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] — 2026-05-07
+
+### Added
+- **`crm_push_contacts`** — batch upsert contacts to Salesforce or HubSpot
+  (auto-detected). Per-contact error isolation so one bad row doesn't fail
+  the batch; `dryRun: true` for preview-without-write. Closes the
+  read-only-CRM gap — `crm_query` could read but nothing could write.
+- **`get_lead_list`** — poll a Lead Gen list by `rawListId`. Companion to
+  the already-async `find_accounts_by_signals` so LLMs can wait for and
+  surface results in-chat instead of dropping the user at the dashboard.
+- Tool count: 24 → **26**.
+
+### Fixed
+- **`find_accounts`** no longer returns Fiber's "trending companies"
+  default (NASA / Disney / Goldman / etc.) when ICP industries silently
+  drop. Three-part fix: (1) `&` ↔ `and` alias normalisation, (2)
+  explicit aliases for "Staffing & Recruiting" / "Logistics & Supply
+  Chain", (3) refuse-to-call guard when no subject filter survives —
+  now errors clearly with `FIBER_NO_SUBJECT_FILTER` instead of silent
+  garbage. Response now includes `meta.filterDiagnostics` showing
+  applied vs dropped filters per axis.
+- **`find_accounts_by_signals`** response shape rewritten so async-job
+  semantics are obvious to LLMs (was `preview: []` which was routinely
+  treated as "tool returned nothing"). New shape leads with
+  `job: { status: 'running', etaMinutes, pollWith: 'get_lead_list' }`
+  plus a structured `next_action` block with explicit polling
+  instructions.
+
 ## [0.1.0] — 2026-05-06
 
 Initial public release.
@@ -39,5 +67,6 @@ Initial public release.
 - "What's next?" prompt suggestions appended to most skill outputs (one-tab
   acceptance to chain into the next workflow).
 
-[Unreleased]: https://github.com/Revenoid-Inc/revenoid-claude-plugin/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/Revenoid-Inc/revenoid-claude-plugin/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/Revenoid-Inc/revenoid-claude-plugin/releases/tag/v0.1.1
 [0.1.0]: https://github.com/Revenoid-Inc/revenoid-claude-plugin/releases/tag/v0.1.0
