@@ -59,14 +59,18 @@ For each picked account:
 1. Run `find_prospects({ companyDomains: [<domain>] })` — bulk people search at that company
 2. Run `enrich_contacts({ leadGenProspectIds: [...] })` — verified emails
 
-Then if the user wants outreach drafted:
+Then if the user wants outreach drafted, follow the **`messaging-policy`** hierarchy — never compose the email as prose yourself, never delegate to a generic document tool:
 
-3. Call `list_messaging_agents({ messageType: "email" })` to get their default email agent (capture `defaultAgentId`)
+3. Call `list_messaging_agents({ messageType: "email" })`.
+   - If it returns at least one agent: capture `defaultAgentId` → **TIER 1**.
+   - If empty: skip the agent ID → **TIER 2** (framework engine still uses the user's company voice).
 4. For each enriched prospect, call `generate_message` with:
    - `messageType: "email"`
-   - `messagingAgentId: <defaultAgentId>`
+   - `messagingAgentId: <defaultAgentId>`  *(omit this field for TIER 2)*
    - `stakeholderId: <prospect's stakeholder id>`
    - `userQuery: "Cold email from <user name> at <user company> to <prospect name> at <account>. Angle: <best matched signal from research_account>."`
+
+**Do not write the cold-email body as prose yourself.** TIER 3 (Claude prose) is only acceptable if `generate_message` errors twice — and even then, disclose the fallback to the user before composing.
 
 Show each draft inline. Offer: "Want me to push these to your Outreach / Salesloft sequence?" (Note: that's a future capability, not yet wired.)
 

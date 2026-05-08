@@ -14,6 +14,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] — 2026-05-08
+
+### Added
+- **`messaging-policy` skill** — universal Revenoid policy for ALL sales-content
+  generation (emails, LinkedIn, sequences, callprep, account plans, briefs, posts,
+  presentations). Establishes the three-tier hierarchy:
+    1. `list_messaging_agents` → `generate_message` with `messagingAgentId`
+       (user's trained agent — preferred path)
+    2. `generate_message` without `messagingAgentId` (framework engine still
+       uses the user's company voice — fallback)
+    3. Claude prose composition (last resort, only after both tiers error,
+       and only with explicit user disclosure)
+  Auto-fires on broad generation phrasing including "show me the premeeting
+  plan for X", "build a brief on Y", "draft outreach to Z", etc. Closes the
+  gap that let Cowork's native PDF skill win against `pre-call-prep` for
+  prompts like "show me premeeting plan for Spectro Cloud".
+
+### Changed
+- **`pre-call-prep` skill** — added a top-of-file ANTI-PATTERN ALERT calling
+  out the most common failure mode (composing the brief from gathered
+  context instead of via `generate_message(callprep)`). Step 5 is now
+  marked **MANDATORY** with explicit TIER 1 / TIER 2 / TIER 3 sub-steps.
+  Description broadened to match phrasings like "show me the premeeting
+  plan for", "give me prep for", "build me a callprep for".
+- **`account-plan` skill** — added ANTI-PATTERN ALERT, Step 2 explicitly
+  handles the no-agent-saved case (TIER 2 fallback) instead of failing,
+  Step 3 marked **MANDATORY**. Description broadened.
+- **`find-and-engage` skill** — Step 4 (cold-email drafting) now follows
+  the messaging-policy hierarchy explicitly. TIER 1/2/3 fallback wiring,
+  with disclosure language for TIER 3.
+
+### Backend (ships independently via core.revenoid.com — no client release needed)
+- **`generate_message` tool description** — rewritten to lead with "PREFERRED
+  tool for ALL sales-context content generation" and the three-tier hierarchy.
+  Visible to Claude in every session where the toolset is loaded, regardless
+  of which skill (if any) fires. Most reliable lever for the cross-cutting
+  policy.
+
 ## [0.1.1] — 2026-05-07
 
 ### Added

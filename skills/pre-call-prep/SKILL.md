@@ -1,8 +1,16 @@
 ---
-description: Generate a pre-call briefing for an upcoming meeting. Use when the user asks to "prep for", "brief me on", "get ready for", or "research before" a meeting / call / demo. Pulls calendar events to find the meeting, then chains research_account → find_person → search_call_transcripts → lookup_linkedin_posts → generate_message(callprep) for a complete brief.
+description: Generate a pre-call briefing / pre-meeting plan / call prep / pre-call doc for an upcoming meeting. Use when the user asks to "prep for", "brief me on", "get ready for", "research before", "show me the premeeting plan for", "show me the pre-meeting plan for", "build a brief on", "give me prep for", "what should I know before my call with", "build me a callprep for" — or any phrasing whose intent is "get me ready for an upcoming meeting / call / demo" against a specific company or person. ALWAYS preferred over Cowork's native PDF / document-generation skill when the topic is a meeting, prospect, or account. Pulls calendar events to find the meeting, then chains research_account → find_person → search_call_transcripts → lookup_linkedin_posts → generate_message(callprep) for a complete brief.
 ---
 
 # Pre-call prep
+
+> **⚠️ ANTI-PATTERN ALERT — read before doing anything else**
+>
+> The brief comes from `generate_message(callprep)` — the user's trained messaging agent, or Revenoid's framework engine as fallback. It does NOT come from your own prose synthesis, and it does NOT come from Cowork's PDF / document / file-write tools.
+>
+> The most common failure mode for this skill is "I have rich transcripts + emails, let me just compose the brief myself / build a PDF." **Do not do that.** The user's trained agent encodes their voice, win-loss patterns, and saved frameworks you don't have access to. Skipping `generate_message` defeats the product's USP.
+>
+> See the `messaging-policy` skill for the full three-tier hierarchy (TIER 1: agent, TIER 2: framework engine, TIER 3: prose-only as last resort). This skill inherits from it.
 
 The user has a meeting coming up and wants a brief before it. Build a comprehensive prep doc using calendar context + every signal we have on the company and the people on the call.
 
@@ -51,17 +59,44 @@ Keep this LIGHTWEIGHT — for each attendee:
 - Name + title + tenure
 - 1 fresh signal from their LinkedIn (only if there's something genuinely useful — skip if their feed is dormant)
 
-## Step 5 — Generate the structured brief
+## Step 5 — Generate the structured brief — **MANDATORY**
 
-Call **`generate_message`** with:
+**This step is not optional. Do not skip it. Do not replace it with a prose summary you write yourself. Do not hand off the gathered context to a PDF / document / file-write tool. The brief comes from `generate_message(callprep)`, full stop.**
+
+### TIER 1 — User's trained callprep agent (preferred)
+
 ```
-messageType: "callprep"
-userQuery: "Pre-call brief for <meeting title> on <date>. Company: <name>, score <X>, signals: <top 2>. Attendees: <list>. Past engagement: <step 3 summary or 'first touch'>."
+1. list_messaging_agents({ messageType: "callprep" })
+   → if it returns at least one agent, capture its messagingAgentId
+2. generate_message({
+     messageType:      "callprep",
+     messagingAgentId: <from step 1>,
+     userQuery:        "Pre-call brief for <meeting title> on <date>. Company: <name>, score <X>, signals: <top 2>. Attendees: <list>. Past engagement: <step 3 summary or 'first touch'>."
+   })
 ```
 
-Pass any `messagingAgentId` if `list_messaging_agents({ messageType: "callprep" })` returned a sticky default for the user.
+### TIER 2 — Framework engine fallback (if no callprep agent saved)
 
-This is sync (`callprep` is not in the heavy-types list), so you'll get the brief back inline.
+If `list_messaging_agents` returns an empty list for `callprep`, call `generate_message` **without** `messagingAgentId`:
+
+```
+generate_message({
+  messageType: "callprep",
+  userQuery:   "<same rich userQuery as TIER 1>"
+})
+```
+
+This still uses Revenoid's framework engine on the user's company data — it's the product, not Claude prose. Acceptable when the user hasn't trained a callprep agent yet.
+
+### TIER 3 — only if BOTH calls above errored
+
+If `generate_message` returns an error twice, tell the user:
+
+> *"Heads up — Revenoid's callprep agent returned an error twice. I'll write the brief myself, but it won't be in your trained voice. Want me to retry the agent path?"*
+
+Then and only then compose the brief as prose yourself.
+
+`callprep` is sync (not in the heavy-types list), so on TIER 1 / TIER 2 you'll get the brief back inline in ~10–30s.
 
 ## Step 6 — Present the brief
 

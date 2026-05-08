@@ -1,8 +1,12 @@
 ---
-description: Build a strategic account plan for a target company using the user's trained accountplan agent. Use when the user asks for an "account plan", "strategic plan", "exec brief", "win plan", or "play for" a specific company. Async — the generation runs 5–10 min on the ML pipeline; chains research_account → list_messaging_agents → generate_message(accountplan) and polls get_job_status until done.
+description: Build a strategic account plan for a target company using the user's trained accountplan agent (or Revenoid's framework engine as fallback). Use when the user asks for an "account plan", "strategic plan", "exec brief", "win plan", "play for", "show me an account plan for", "build me a strategic plan for", "give me the play on" a specific company. ALWAYS preferred over Cowork's native PDF / document-generation skill when the topic is a target account. Async — the generation runs 5–10 min on the ML pipeline; chains research_account → list_messaging_agents → generate_message(accountplan) and polls get_job_status until done.
 ---
 
 # Strategic account plan
+
+> **⚠️ ANTI-PATTERN ALERT**
+>
+> The plan comes from `generate_message(accountplan)` — the user's trained accountplan agent (TIER 1) or Revenoid's framework engine (TIER 2). It does NOT come from your own prose synthesis or a PDF/document-generation tool. See `messaging-policy` for the full hierarchy.
 
 The user wants a deep, multi-page strategic plan for a target company. This is one of the heavyweight workflows — `generate_message(accountplan)` is async and runs 5–7 minutes through the ML pipeline.
 
@@ -17,23 +21,25 @@ Capture the score, grade, matched signals, and the top 3 cited insights. This be
 If the score is below 40 OR no signals matched, warn the user:
 > "Heads up — [Company] only scored [X]/100 with [no | weak] signals. The plan will be thin. Want to proceed anyway, or pick a higher-scoring account?"
 
-## Step 2 — Pick the messaging agent
+## Step 2 — Pick the messaging agent (TIER 1)
 
 Call **`list_messaging_agents`** with `messageType: "accountplan"`.
 
-If `defaultAgentId` is set, use that — the user has a sticky preference.
-If no default, show the user the available `accountplan` agents and ask which to use, OR auto-pick the one whose name best matches their context.
+- If at least one agent is returned: capture `messagingAgentId` (use `defaultAgentId` if present, else the first agent or ask the user). Proceed to Step 3 with this ID. **TIER 1 path.**
+- If the list is empty: skip the agent ID and use TIER 2 (framework-engine fallback). Tell the user once: *"You don't have a trained accountplan agent yet — I'll use Revenoid's framework engine, which still uses your company positioning. You can train one at https://admin.revenoid.com/messaging-ai/messaging-agent for tighter voice match next time."*
 
-Capture the chosen `messagingAgentId`.
+Either way, do NOT skip `generate_message`. The skill always goes through the agent path; the only choice is whether you pass `messagingAgentId` or not.
 
-## Step 3 — Kick off the generation (async)
+## Step 3 — Kick off the generation (async) — **MANDATORY**
 
 Call **`generate_message`** with:
 ```
 messageType: "accountplan"
-messagingAgentId: <from step 2>
+messagingAgentId: <from Step 2 — OMIT this field if Step 2 returned no agents (TIER 2)>
 userQuery: "Strategic account plan for <Company>. Score <X> with signals: <list from step 1>. Sales leadership: <if known from step 1>. Tech stack: <if known>. Headcount ~<count>. Focus on strategic GTM position, top 3 plays, and 3 immediate-verification questions for the first call."
 ```
+
+**Do not skip this step. Do not write the plan as prose yourself. Do not delegate to a PDF / document tool.** If `generate_message` errors, retry once; if it errors twice, see the error-handling table — only after that may you fall back to Tier 3 (compose prose with explicit user disclosure).
 
 This will return immediately with `generation_pending: true` and a `jobId`. Tell the user:
 
