@@ -1,6 +1,6 @@
 {
   "name": "revenoid",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "AI sales workflow on MCP — discover, research, enrich, engage, and write back to CRM via 26 tools spanning Salesforce, HubSpot, Google Calendar, Microsoft 365, Gong, Chorus, Avoma, Coresignal, Apollo, and Fiber AI. Includes trained messaging agents that draft outreach in your voice.",
   "author": {
     "name": "Revenoid",

@@ -14,6 +14,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3] — 2026-05-09
+
+### Changed
+- **Skill descriptions broadened with verb phrasings.** Closes the routing
+  race we hit on Cowork against Anthropic-provided skills. Real failure
+  case: user typed *"write a pre-meeting prep for Harness"* and Cowork
+  routed to `anthropic-skills:next-call-guide` instead of our
+  `revenoid:pre-call-prep` because our description listed phrasings like
+  "prep for", "brief me on", "build a brief on" but didn't include
+  the verb **"write"**. Same gap for `account-plan` (against
+  `anthropic-skills:strategic-opportunity-summary`) and `find-and-engage`
+  (against the `anthropic-skills:apollo-*-prospector` skills).
+
+  Added phrasings cover the full verb space — write, create, build,
+  generate, draft, make, prepare, produce — × the noun space:
+    pre-call-prep:    prep, brief, callprep, plan, guide, doc, deck
+    account-plan:     plan, brief, summary, deck, doc, playbook
+    find-and-engage:  list, batch, leads, prospects, target accounts
+
+  Each description now explicitly names the competing native skills it
+  should win against AND why (no access to user's voice / CRM /
+  transcripts / ICP). Skill router has more reasons to pick us when the
+  user is genuinely doing sales work.
+
+### Notes on the broader pattern
+- Skill-description routing is whack-a-mole. Every quarter Anthropic
+  ships another skill that competes. The structural fix is the
+  `revenoid_workflow` tool (Phase 11 backend, ships separately) — tool
+  descriptions don't compete for routing the way skill descriptions do.
+  This release patches the immediate failure modes; the orchestrator is
+  the long-term answer.
+
 ## [0.1.2] — 2026-05-08
 
 ### Added
